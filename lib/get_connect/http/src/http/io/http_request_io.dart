@@ -44,7 +44,10 @@ class HttpRequestImpl extends HttpRequestBase {
         ..persistentConnection = request.persistentConnection
         ..maxRedirects = request.maxRedirects
         ..contentLength = request.contentLength ?? -1;
-      request.headers.forEach(ioRequest.headers.set);
+
+      for (final entry in request.headers.entries) {
+        ioRequest.headers.set(entry.key, entry.value, preserveHeaderCase: true);
+      }
 
       var response = timeout == null
           ? await stream.pipe(ioRequest) as io.HttpClientResponse
