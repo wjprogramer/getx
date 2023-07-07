@@ -790,6 +790,49 @@ you can only use widgets and widget functions here''';
         );
   }
 
+  /// @Author: WJ
+  /// TODO: More check
+  /// Reference: [off]
+  void replaceRoute<T>(dynamic page, {
+    required Route<dynamic> oldRoute,
+    bool opaque = false,
+    Transition? transition,
+    Curve? curve,
+    bool? popGesture,
+    int? id,
+    String? routeName,
+    dynamic arguments,
+    Bindings? binding,
+    bool fullscreenDialog = false,
+    bool preventDuplicates = true,
+    Duration? duration,
+    double Function(BuildContext context)? gestureWidth,
+  }) {
+    routeName ??= "/${page.runtimeType.toString()}";
+    routeName = _cleanRouteName(routeName);
+    if (preventDuplicates && routeName == currentRoute) {
+      return null;
+    }
+    return global(id).currentState?.replace(
+      oldRoute: oldRoute,
+      newRoute: GetPageRoute(
+        opaque: opaque,
+        gestureWidth: gestureWidth,
+        page: _resolvePage(page, 'off'),
+        binding: binding,
+        settings: RouteSettings(
+          arguments: arguments,
+          name: routeName,
+        ),
+        routeName: routeName,
+        fullscreenDialog: fullscreenDialog,
+        popGesture: popGesture ?? defaultPopGesture,
+        transition: transition ?? defaultTransition,
+        curve: curve ?? defaultTransitionCurve,
+        transitionDuration: duration ?? defaultTransitionDuration),
+    );
+  }
+
   /// Returns true if a Snackbar, Dialog or BottomSheet is currently OPEN
   bool get isOverlaysOpen =>
       (isSnackbarOpen || isDialogOpen! || isBottomSheetOpen!);

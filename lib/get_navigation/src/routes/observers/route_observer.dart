@@ -29,6 +29,8 @@ String? _extractRouteName(Route? route) {
 }
 
 class GetObserver extends NavigatorObserver {
+  static List<Route<dynamic>> history = <Route<dynamic>>[];
+
   final Function(Routing?)? routing;
 
   final Routing? _routeSend;
@@ -79,6 +81,9 @@ class GetObserver extends NavigatorObserver {
     // print('currentRoute.isDialog ${currentRoute.isDialog}');
 
     routing?.call(_routeSend);
+
+    // WJ
+    history.remove(route);
   }
 
   @override
@@ -120,6 +125,9 @@ class GetObserver extends NavigatorObserver {
     if (routing != null) {
       routing!(_routeSend);
     }
+
+    // WJ
+    history.add(route);
   }
 
   @override
@@ -145,6 +153,9 @@ class GetObserver extends NavigatorObserver {
       RouterReportManager.reportRouteWillDispose(route);
     }
     routing?.call(_routeSend);
+
+    // WJ
+    history.remove(route);
   }
 
   @override
@@ -182,6 +193,10 @@ class GetObserver extends NavigatorObserver {
     }
 
     routing?.call(_routeSend);
+
+    // WJ
+    history.remove(oldRoute);
+    if (newRoute != null) history.add(newRoute);
   }
 }
 
